@@ -1,16 +1,34 @@
 require("dotenv").config({ path: __dirname + "/.env" });
 
-const http = require("http");
+const express = require("express");
+const axios = require("axios");
+const parseString = require("xml2js").parseString;
 
-const hostname = "127.0.0.1";
-const port = process.env.PORT;
+const app = express();
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello World!\n");
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Online!");
+});
+app.post("/poc", (req, res) => {
+  Promise.all(
+    req.body.map((url) =>
+      axios.get(url).then((content) => {
+        let parsedItems;
+        parseString(content.data, (err, xml) => {
+          if (xml?.rss?.channel?.[0]?.item)
+            parsedItems = xml.rss.channel[0].item;
+          else parsedItems = [];
+        });
+        return parsedItems;
+      })
+    )
+  ).then((allXML) => {
+    res.send(allXML.reduce((acc, curr) => [...acc, ...curr]));
+  });
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+app.listen(process.env.PORT, () =>
+  console.log(`Server ready on port ${process.env.PORT}`)
+);
