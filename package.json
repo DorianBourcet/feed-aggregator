@@ -1,0 +1,14 @@
+{
+  "name": "feed_aggregator",
+  "version": "1.0.0",
+  "description": "Create your own feed agregating other feeds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dorian Bourcet",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  }
+}
