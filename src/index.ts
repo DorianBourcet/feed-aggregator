@@ -1,15 +1,16 @@
-require("dotenv").config({ path: __dirname + "/.env" });
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
-const axios = require("axios");
-const parseString = require("xml2js").parseString;
+import express from "express";
+import axios from "axios";
+import { parseString } from "xml2js";
 
 const app = express();
 
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Online!");
+  res.send("Online! Pommier Joli !!!!");
 });
 app.post("/poc", (req, res) => {
   Promise.all(
@@ -25,7 +26,7 @@ app.post("/poc", (req, res) => {
       })
     )
   ).then((allXML) => {
-    res.send(allXML.reduce((acc, curr) => [...acc, ...curr]));
+    res.send(allXML.reduce((acc: Array<any>, curr: any) => [...acc, ...curr]));
   });
 });
 
